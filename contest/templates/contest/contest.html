@@ -65,7 +65,9 @@
               <div class="col-auto">
                 <button type="submit" class="btn btn-primary mb-3">submit</button>
               </div>
-              {{ massege }}
+              {% if message %}
+                <p>{{ message }}</p>
+              {% endif %}
           </form>
         </div>
       </div>
@@ -75,16 +77,16 @@
         <div class="row">
           {% for participant in participants %}
             {% if participant %}
-            <div class="col-md-6 mb-3">
-              <div class="my_container">
-                <h3>{{ participant.name }}</h3>
-                <p>{{ participant.email }}</p>
-                <pre><code class="language-python hljs">{{ participant.code|linebreaksbr }}</code></pre>
+              <div class="col-md-6 mb-3">
+                <div class="my_container">
+                  <h3>{{ participant.name }}</h3>
+                  <p>{{ participant.email }}</p>
+                  <pre><code class="language-python hljs">{{ participant.code|linebreaksbr }}</code></pre>
+                </div>
               </div>
-            </div>
-            {% if forloop.counter|divisibleby:2 %}
-              </div><div class="row">
-            {% endif %}
+              {% if forloop.counter|divisibleby:2 %}
+                </div><div class="row">
+              {% endif %}
             {% else %}
             <h1>Тут никого нет станьте первыми!</h1>
             {% endif %}

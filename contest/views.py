@@ -1,24 +1,24 @@
-from django.http import Http404
-from django.shortcuts import redirect, render
-from django.views.generic import CreateView
-
-
+from django.views import View
+from django.shortcuts import render
 from .forms import ParticipantForm
-
 from .models import Participant
 
-
-def ContestView(request):
+class ContestView(View):
     """Страница конкурса"""
-    participants = Participant.objects.all().order_by('-created_at')  # <--- Add this line
-    massege = ''
-    if request.method == 'POST':
+    template_name = 'contest/contest.html'
+    message = ''
+
+    def get(self, request):
+        participants = Participant.objects.all().order_by('-created_at')
+        form = ParticipantForm()
+        return render(request, self.template_name, {'form': form, 'participants': participants, 'message': self.message})
+
+    def post(self, request):
         form = ParticipantForm(request.POST)
         if form.is_valid():
             form.save()
-            massege = 'Спасибо за участие!'
+            self.message = 'Спасибо за участие!'
         else:
-            massege = 'Ошибка'
-    else:
-        form = ParticipantForm()
-    return render(request, 'contest/contest.html', {'form': form, 'massege': massege, 'participants': participants})
+            self.message = 'Ошибка'
+        participants = Participant.objects.all().order_by('-created_at')
+        return render(request, self.template_name, {'form': form, 'message': self.message, 'participants': participants})
